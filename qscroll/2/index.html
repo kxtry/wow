@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <meta HTTP-EQUIV="expires" CONTENT="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+
+    <title>iScroll demo: infinite scroldivng</title>
+    <link type="text/css" rel="stylesheet" href="list.css" />
+
+    <script type="text/javascript" src="qscroll-infinite.js"></script>
+    <script type="text/javascript" src="http://libs.cdnjs.net/zepto/1.1.3/zepto.min.js"></script>
+    <script type="text/javascript">
+        var myScroll;
+        var myData = [];
+        function loaded () {
+
+            for(var i = 0; i < 3312; i++){
+                myData.push(i.toString());
+            }
+
+            myScroll = new QScroll('#j-brand-wrap', {
+                limit:myData.length,
+                dataFiller: updateContent,
+                scroller:'#j-brand-slide',
+                thruster: '#thruster',
+                elementHeight:'#hittest',
+                elementLength:600
+            });
+        }
+
+        function updateContent(idx, length){
+            var html = '';
+            for(var i = idx; i < idx+length; i++){
+                var data = myData[i];
+                html += '<div class="u-brand-list-pub">';
+                var k = i % 3;
+                switch (k) {
+                    case 0:
+                        html += '<span class="u-brand-font"><b><span class="u-img-font">N'+i+'</span></b></span>';
+                        html += '<span class="u-brand-txt">N'+i+'</span>';
+                        break;
+                    case 1:
+                        var logo = 'http://a.vimage1.com/upload/brandcool/0/2016/04/13/138/90f775b3-0bdd-4251-b287-1157b8214f93_100x100_80.png';
+                        html += '<span class="u-brand-img"><span></span><img src="'+logo+'"/></span>';
+                        html += '<span class="u-brand-txt">N'+i+'</span>';
+                        break;
+                    case 2:
+                        var titleLetter = data.split('-')[0];
+                        html += '<h3>'+titleLetter+'</h3>';
+                        break;
+                }
+                html += '</div>';
+            }
+            return html;
+        }
+
+    </script>
+</head>
+<body onload="loaded()">
+<div class="wrapper" id="j-brand-wrap">
+    <div class="scroller" id="j-brand-slide">
+        <div id="thruster"></div>
+        <div class="u-brand-list-pub u-brand-letter" id="hittest">
+            <h3>A</h3>
+        </div>
+    </div>
+</div>
+</body>
+</html>
