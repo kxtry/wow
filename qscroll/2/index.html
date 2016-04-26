@@ -21,7 +21,7 @@
                 type:'get',
                 url:'/wow/qscroll/data.json',
                 dataType: 'json',
-                timeout: 300,
+                timeout: 15000,
                 success: function(re){
                     if(re.data.sort_list){
                         var itemData = re.data.sort_list;
@@ -59,7 +59,7 @@
                     scroller:'#j-brand-slide',
                     thruster: '#thruster',
                     elementHeight:'#hittest',
-                    elementLength:600
+                    elementLength:20
                 });
             }
         }
@@ -119,6 +119,7 @@
     </script>
 </head>
 <body onload="loaded()">
+<div class="header">BrandList</div>
 <div class="wrapper" id="j-brand-wrap">
     <div class="scroller" id="j-brand-slide">
         <div id="thruster"></div>
@@ -127,5 +128,6 @@
         </div>
     </div>
 </div>
+<div class="footer"></div>
 </body>
 </html>
