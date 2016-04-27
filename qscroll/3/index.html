@@ -54,44 +54,39 @@
 
             function init(){
                 myScroll = new QScroll('#j-brand-wrap', {
-                    limit:myData.length,
-                    dataFiller: updateContent,
-                    scroller:'#j-brand-slide',
-                    thruster: '#thruster',
-                    elementHeight:'#hittest',
-                    elementLength:20
+                    infiniteLimit:myData.length,
+                    infiniteScroller:'#j-brand-slide',
+                    infiniteElements: '.u-brand-list-pub-wrap',
+                    dataFiller: updateContent
                 });
             }
         }
 
-        function updateContent(idx, length){
-            var html = '';
-            for(var i = idx; i < idx+length; i++){
-                var data = myData[i];
-                html += '<div class="u-brand-list-pub">';
-                if(typeof(data) === 'object'){
-                    var name = data.name;
-                    if(name == ""){
-                        name = data.name_eng;
-                    }
-                    if(data.logo === ''){
-                        html += '<span class="u-brand-font"><b><span class="u-img-font">'+name+'</span></b></span>';
-                    }else{
-                        html += '<span class="u-brand-img"><span></span><img src="'+data.logo+'"/></span>';
-                        //html += '<span class="u-brand-img"><span></span><img/></span>';
-                    }
-                    if(!!data.brands &&  data.brands.length> 1){
-                        name = name + " (" + data.brands.length + ")";
-                    }
-                    html += '<span class="u-brand-txt">'+name+'</span>';
-                    //html += '<span class="u-brand-txt">'+i+':'+name+'</span>';
-                }else if(typeof(data) === 'string'){
-                    var titleLetter = data.split('-')[0];
-                    html += '<h3>'+titleLetter+'</h3>';
+        function updateContent(el, idx){
+            var data = myData[idx];
+            var html = '<div class="u-brand-list-pub">';
+            if(typeof(data) === 'object'){
+                var name = data.name;
+                if(name == ""){
+                    name = data.name_eng;
                 }
-                html += '</div>';
+                if(data.logo === ''){
+                    html += '<span class="u-brand-font"><b><span class="u-img-font">'+name+'</span></b></span>';
+                }else{
+                    html += '<span class="u-brand-img"><span></span><img src="'+data.logo+'"/></span>';
+                    //html += '<span class="u-brand-img"><span></span><img/></span>';
+                }
+                if(!!data.brands &&  data.brands.length> 1){
+                    name = name + " (" + data.brands.length + ")";
+                }
+                html += '<span class="u-brand-txt">'+name+'</span>';
+                //html += '<span class="u-brand-txt">'+i+':'+name+'</span>';
+            }else if(typeof(data) === 'string'){
+                var titleLetter = data.split('-')[0];
+                html += '<h3>'+titleLetter+'</h3>';
             }
-            return html;
+            html += '</div>';
+            el.innerHTML = html;
         }
 
     </script>
@@ -100,10 +95,28 @@
 <div class="header">qscroll-infinite-reuse</div>
 <div class="wrapper" id="j-brand-wrap">
     <div class="scroller" id="j-brand-slide">
-        <div id="thruster"></div>
-        <div class="u-brand-list-pub u-brand-letter" id="hittest">
-            <h3>A</h3>
-        </div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub-wrap"></div>
     </div>
 </div>
 <div class="footer"></div>

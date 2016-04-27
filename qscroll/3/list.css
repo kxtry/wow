@@ -48,20 +48,21 @@ body{
 .scroller {
     width: 100%;
     transform: translate3d(0, 0, 0);
+    position: relative;
 }
-.scroller #thruster {
-    width: 0;
-}
-.scroller #histest {
-    visibility: hidden;
+
+.u-brand-list-pub-wrap {
+    position: absolute;
+    width: 100%;
+    height: 79px;
+    border-bottom: 1px solid #e7e7e7;
+    overflow: hidden;
 }
 
 .u-brand-list-pub {
     position: relative;
     width: 100%;
-    height: 79px;
-    border-bottom: 1px solid #e7e7e7;
-    overflow: hidden;
+    height: 100%;
 }
 
 .u-brand-list-pub h3 {

@@ -249,6 +249,8 @@ QScroll.prototype = {
             this.options.elementLength = this.elementVisible * 15;
         }
 
+        this.elementZeroIdx = 0;
+        this.elementZeroOffset = 0;
         for(var i = 0; i < this.infiniteScroller.children.length; i++){
             var item = this.infiniteScroller.children[i];
             if(item === this.infiniteThruster){

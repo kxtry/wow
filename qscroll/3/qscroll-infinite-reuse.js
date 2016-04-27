@@ -164,14 +164,13 @@ function QScroll (el, options) {
         disableNativeScroll:true,
         HWCompositing: true,
         dataClick:function(i){},
-        dataFiller: function(idx, length){},
+        dataFiller: function(el, idx){},
         typeMoving: TM.ScrollTop,
         useTracking: true,
-        elementLength:-1, // < 0: auto calc elementLength's value.
-        elementHeight:0,
         timeConstant: 325, // ms
         scaleFactor: 1000,
-        bottomMargin: 0
+        bottomMargin: 0,
+        infiniteLimit: 0
     };
 
     for ( var i in options ) {
@@ -179,14 +178,10 @@ function QScroll (el, options) {
     }
 
     this.infiniteWrapper = typeof el == 'string' ? document.querySelector(el) : el;
-    this.infiniteScroller = typeof options.scroller == 'string' ? document.querySelector(options.scroller) : options.scroller;
-    this.infiniteThruster = typeof options.thruster == 'string' ? document.querySelector(options.thruster) : options.thruster;
-    if(typeof options.elementHeight == 'string'){
-        var element = document.querySelector(options.elementHeight);
-        this.options.elementHeight = element.offsetHeight;
-        this.infiniteScroller.removeChild(element);
-    }
-
+    this.infiniteScroller = typeof options.infiniteScroller == 'string' ? document.querySelector(options.infiniteScroller) : options.infiniteScroller;
+    this.infiniteElements = typeof options.infiniteElements == 'string' ? document.querySelectorAll(options.infiniteElements) : options.infiniteElements;
+    this.infiniteElementHeight = this.infiniteElements[0].offsetHeight;
+    this.infiniteLength = this.infiniteElements.length;
     this.init();
 }
 
@@ -244,11 +239,11 @@ QScroll.prototype = {
     initContent: function () {
         var rf = this.infiniteWrapper.offsetHeight;		// Force reflow
         this.wrapperHeight	= this.infiniteWrapper.clientHeight;
-        this.elementVisible = Math.floor(this.wrapperHeight / this.options.elementHeight) + 3;
-        if(this.options.elementLength < 0){
-            this.options.elementLength = this.elementVisible * 15;
-        }
+        this.elementVisible = Math.ceil(this.wrapperHeight / this.infiniteElementHeight);
+        this.infiniteUpperBufferSize = Math.floor((this.infiniteLength - this.elementVisible) / 2);
 
+        this.elementZeroIdx = 0;
+        this.elementZeroOffset = 0;
         for(var i = 0; i < this.infiniteScroller.children.length; i++){
             var item = this.infiniteScroller.children[i];
             if(item === this.infiniteThruster){
@@ -258,10 +253,11 @@ QScroll.prototype = {
             }
         }
 
-        this.infiniteScroller.style['height'] = this.options.bottomMargin + this.elementZeroOffset + this.options.limit * this.options.elementHeight + 'px';
+        this.infiniteScroller.style['height'] = this.options.bottomMargin + this.elementZeroOffset + this.options.infiniteLimit * this.infiniteElementHeight + 'px';
         this.scrollerHeight	= this.infiniteScroller.offsetHeight;
         this.maxScrollY = this.scrollerHeight - this.wrapperHeight;
-        this.infiniteHeight = this.options.elementHeight * this.options.elementLength;
+        this.infiniteHeight = this.infiniteElementHeight * this.infiniteLength;
+
 
         this.translateZ = this.options.HWCompositing && utils.hasPerspective ? ' translateZ(0)' : '';
         switch (this.options.typeMoving) {
@@ -305,17 +301,54 @@ QScroll.prototype = {
         this.thrusterHeight = 0;
         this.y = 0;
         this.ydelta = 0;
-        this.infiniteThruster.style['padding-top'] = '0px';
-        var html = this.options.dataFiller.call(this, 0, this.options.elementLength);
-        this.insertDOM(html, null);
-        this.idxL = 0;
-        this.idxH = this.options.elementLength;
-        this.pxL = 0;
-        this.pxH = this.options.elementLength * this.options.elementHeight + this.elementZeroOffset;
+
+        //do reuse
+        //for(var i = 0; i < this.infiniteElements.length; i++){
+        //    var el = this.infiniteElements[i];
+        //    this.options.dataFiller.call(this, el, i);
+        //}
+        this.updateContent(0);
     },
 
     updateContent: function (y) {
+        var center = y + this.wrapperHeight / 2;
 
+        var minorPhase = Math.max(Math.floor(y / this.infiniteElementHeight) - this.infiniteUpperBufferSize, 0),
+            majorPhase = Math.floor(minorPhase / this.infiniteLength),
+            phase = minorPhase - majorPhase * this.infiniteLength;
+
+        var top = 0;
+        var i = 0;
+        var update = [];
+
+        while ( i < this.infiniteLength ) {
+            top = i * this.infiniteElementHeight + majorPhase * this.infiniteHeight;
+
+            if ( phase > i ) {
+                top += this.infiniteElementHeight * this.infiniteLength;
+            }
+
+            if ( this.infiniteElements[i]._top !== top ) {
+                this.infiniteElements[i]._phase = top / this.infiniteElementHeight;
+
+                if ( this.infiniteElements[i]._phase < this.options.infiniteLimit ) {
+                    this.infiniteElements[i]._top = top;
+                    if ( this.options.infiniteUseTransform ) {
+                        this.infiniteElements[i].style[utils.style.transform] = 'translate(0, ' + top + 'px)' + this.translateZ;
+                    } else {
+                        this.infiniteElements[i].style.top = top + 'px';
+                    }
+                    update.push(this.infiniteElements[i]);
+                }
+            }
+
+            i++;
+        }
+
+        for(var i = 0; i < update.length; i++){
+            var el = update[i];
+            this.options.dataFiller.call(this, el, el._phase);
+        }
     },
 
     jumpToContent: function (y) {
@@ -376,7 +409,7 @@ QScroll.prototype = {
 
     // jump to element.
     jumpTo: function (i, offset) {
-        var y = i * this.options.elementHeight + this.elementZeroOffset;
+        var y = i * this.infiniteElementHeight + this.elementZeroOffset;
         this.amplitude = 0; // stop animation.
         this.ydelta = 0; // stop moving.
         this.translate(y, this.jumpToContent);
@@ -413,7 +446,7 @@ QScroll.prototype = {
         if(y < this.elementZeroOffset){
             return;
         }
-        var i = Math.floor((y - this.elementZeroOffset) / this.options.elementHeight);
+        var i = Math.floor((y - this.elementZeroOffset) / this.infiniteElementHeight);
         console.log('click.index:'+i);
         this.options.dataClick.call(this, i);
     },
