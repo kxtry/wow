@@ -170,7 +170,8 @@ function QScroll (el, options) {
         timeConstant: 325, // ms
         scaleFactor: 1000,
         bottomMargin: 0,
-        infiniteLimit: 0
+        infiniteLimit: 0,
+        infiniteUseTransform: true
     };
 
     for ( var i in options ) {
