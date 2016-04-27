@@ -171,7 +171,7 @@ function QScroll (el, options) {
         elementHeight:0,
         timeConstant: 325, // ms
         scaleFactor: 1000,
-        bottomMargin: 0,
+        bottomMargin: 0
     };
 
     for ( var i in options ) {
@@ -314,144 +314,12 @@ QScroll.prototype = {
         this.pxH = this.options.elementLength * this.options.elementHeight + this.elementZeroOffset;
     },
 
-    insertDOM: function (html, ref) {
-        //console.time('dom');
-        if(!this.creator){
-            this.creator = document.createElement('div');
-        }
-        this.creator.innerHTML = html;
-        var dom = this.emptyArray.slice.call(this.creator.children);
-        this.creator.innerHTML = '';
-        for(var i = 0; i < dom.length; i++){
-            this.infiniteScroller.insertBefore(dom[i], ref);
-        }
-        //console.timeEnd('dom');
-    },
-
-    removeElement: function (from, length) {
-        //console.time('remove');
-        if(from < 0){
-            from = 0;
-        }
-        var idx = this.elementZeroIdx + from;
-        var total = this.infiniteScroller.children.length - idx;
-        if(total < 0){
-            return 0;
-        }
-        if(total > length){
-            total = length;
-        }
-        for(var i = 0; i < total; i++){
-            this.infiniteScroller.removeChild(this.infiniteScroller.children[idx]);
-        }
-        //console.timeEnd('remove');
-        return total;
-    },
-
     updateContent: function (y) {
-        if(y >= this.pxL && y <= this.pxH - this.wrapperHeight){
-            return;
-        }
-        console.log('updateContent:'+ utils.getTime());
-        if(y < this.y){
-            //scroll up
-            var idxL, idxH, idx, cnt, html, ref;
 
-            y -= this.elementZeroOffset;
-            if(y < 0) {
-                y = 0;
-            }
-
-            idxH = Math.floor((y + this.wrapperHeight + this.options.elementHeight - 1) / this.options.elementHeight) + 1;
-            if(idxH > this.options.limit){
-                idxH = this.options.limit;
-            }
-            idxL = idxH - this.options.elementLength;
-            if(idxL < 0){
-                idxH -= idxL;
-                idxL = 0;
-            }
-            if(idxL === this.idxL && idxH === this.idxH){
-                return;
-            }
-            console.log('up:idxH:'+idxH+',idxL:'+idxL+',y:'+y);
-            idx = idxH - this.idxL;
-            this.removeElement(idx, this.idxH - this.idxL - idx);
-            cnt = this.idxL - idxL;
-            if(cnt > this.options.elementLength){
-                cnt = this.options.elementLength;
-            }else if(cnt <= 0){
-                cnt = this.options.elementLength - this.idxH + this.idxL;
-            }
-            html = this.options.dataFiller.call(this, idxL, cnt);
-            if(cnt >= this.options.elementLength){
-                this.insertDOM(html, null);
-            }else{
-                ref = this.infiniteScroller.children[this.elementZeroIdx];
-                this.insertDOM(html, ref);
-            }
-            this.thrusterHeight = idxL * this.options.elementHeight;
-            this.infiniteThruster.style['padding-top'] = this.thrusterHeight + 'px';
-            this.idxL = idxL;
-            this.idxH = idxH;
-            this.pxL = idxL * this.options.elementHeight + this.elementZeroOffset;;
-            this.pxH = idxH * this.options.elementHeight + this.elementZeroOffset;
-        }else{
-            //scroll down;
-            var idxL, idxH, cnt, idx, html;
-
-            y -= this.elementZeroOffset;
-            if(y < 0) {
-                y = 0;
-            }
-
-            idxL = Math.floor(y / this.options.elementHeight);
-            idxH = idxL + this.options.elementLength;
-            if(idxH > this.options.limit){
-                idxH = this.options.limit;
-            }
-
-            if(idxL == this.idxL && idxH === this.idxH){
-                return;
-            }
-            console.log('down:'+'idxH:'+idxH+',idxL:'+idxL+',y:'+y);
-            cnt = this.removeElement(0, idxL - this.idxL);
-            this.thrusterHeight = idxL * this.options.elementHeight;
-            this.infiniteThruster.style['padding-top'] = this.thrusterHeight + 'px';
-
-            idx = idxL + this.idxH - this.idxL - cnt;
-            html = this.options.dataFiller.call(this, idx, idxH - idx);
-            this.insertDOM(html, null);
-            this.idxL = idxL;
-            this.idxH = idxH;
-            this.pxL = idxL * this.options.elementHeight + this.elementZeroOffset;
-            this.pxH = idxH * this.options.elementHeight + this.elementZeroOffset;
-        }
     },
 
     jumpToContent: function (y) {
-        var yend = y + this.elementVisible * this.options.elementHeight;
-        if(y > this.pxL && yend < this.pxH) {
-            this.translate(y, this.updateContent);
-            return;
-        }
-        var idxL, idxH, idx, html;
-        // clean all..
-        this.removeElement(0, 10000);
-        y -= this.elementZeroOffset;
-        idxL = Math.floor(y / this.options.elementHeight);
-        idxH = idxL + this.elementVisible;
-        if(idxH > this.options.limit){
-            idxH = this.options.limit;
-        }
-        this.thrusterHeight = idxL * this.options.elementHeight;
-        this.infiniteThruster.style['padding-top'] = this.thrusterHeight + 'px';
-        html = this.options.dataFiller.call(this, idxL, idxH - idxL);
-        this.insertDOM(html, null);
-        this.idxL = idxL;
-        this.idxH = idxH;
-        this.pxL = idxL * this.options.elementHeight + this.elementZeroOffset;
-        this.pxH = idxH * this.options.elementHeight + this.elementZeroOffset;
+
     },
 
     animate: function () {

@@ -171,7 +171,7 @@ function QScroll (el, options) {
         elementHeight:0,
         timeConstant: 325, // ms
         scaleFactor: 1000,
-        bottomMargin: 0,
+        bottomMargin: 0
     };
 
     for ( var i in options ) {
