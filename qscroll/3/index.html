@@ -56,7 +56,7 @@
                 myScroll = new QScroll('#j-brand-wrap', {
                     infiniteLimit:myData.length,
                     infiniteScroller:'#j-brand-slide',
-                    infiniteElements: '.u-brand-list-pub-wrap',
+                    infiniteElements: '.u-brand-list-pub',
                     dataFiller: updateContent
                 });
             }
@@ -64,7 +64,7 @@
 
         function updateContent(el, idx){
             var data = myData[idx];
-            var html = '<div class="u-brand-list-pub">';
+            var html = '';
             if(typeof(data) === 'object'){
                 var name = data.name;
                 if(name == ""){
@@ -74,7 +74,6 @@
                     html += '<span class="u-brand-font"><b><span class="u-img-font">'+name+'</span></b></span>';
                 }else{
                     html += '<span class="u-brand-img"><span></span><img src="'+data.logo+'"/></span>';
-                    //html += '<span class="u-brand-img"><span></span><img/></span>';
                 }
                 if(!!data.brands &&  data.brands.length> 1){
                     name = name + " (" + data.brands.length + ")";
@@ -85,7 +84,6 @@
                 var titleLetter = data.split('-')[0];
                 html += '<h3>'+titleLetter+'</h3>';
             }
-            html += '</div>';
             el.innerHTML = html;
         }
 
@@ -95,28 +93,28 @@
 <div class="header">qscroll-infinite-reuse</div>
 <div class="wrapper" id="j-brand-wrap">
     <div class="scroller" id="j-brand-slide">
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
-        <div class="u-brand-list-pub-wrap"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
+        <div class="u-brand-list-pub"></div>
     </div>
 </div>
 <div class="footer"></div>
