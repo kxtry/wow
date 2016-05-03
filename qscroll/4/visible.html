@@ -99,13 +99,13 @@
                 if(data.logo === ''){
                     el.mydata_pub_font.innerText = name;
                     if(type !== 1){
-                        el.mydata_pub_font.style.display = 'block';
+                        el.mydata_pub_font.style.visibility = 'visible';
                         el.mydata_type = 1;
                     }
                 }else{
                     el.mydata_pub_img_src.src = data.logo;
                     if(type !== 2){
-                        el.mydata_pub_font.style.display = 'none';
+                        el.mydata_pub_font.style.visibility = 'hidden';
                         el.mydata_type = 2;
                     }
                 }
@@ -114,13 +114,13 @@
                 }
                 el.mydata_pub_txt.innerText = name;
                 if(type <= 0){
-                    el.mydata_letter.style.display = 'none';
+                    el.mydata_letter.style.visibility = 'hidden';
                 }
             }else{
                 var litleLetter = data.split('-')[0];
                 el.mydata_letter_Char.innerText = litleLetter;
                 if(type !== 0){
-                    el.mydata_letter.style.display = 'block';
+                    el.mydata_letter.style.visibility = 'visible';
                     el.mydata_type = 0;
                 }
             }
@@ -129,7 +129,7 @@
     </script>
 </head>
 <body onload="loaded()">
-<div class="header">qscroll-infinite-reuse-fully</div>
+<div class="header">qscroll-infinite-reuse-visibility</div>
 <div class="wrapper" id="j-brand-wrap">
     <div class="scroller" id="j-brand-slide">
     </div>
