@@ -163,6 +163,7 @@ function QScroll (el, options) {
         disableTouch:false,
         disableNativeScroll:true,
         HWCompositing: true,
+        useTransform: true,
         dataClick:function(i){},
         dataFiller: function(el, idx){},
         typeMoving: TM.ScrollTop,
@@ -170,8 +171,7 @@ function QScroll (el, options) {
         timeConstant: 325, // ms
         scaleFactor: 1000,
         bottomMargin: 0,
-        infiniteLimit: 0,
-        infiniteUseTransform: true
+        infiniteLimit: 0
     };
 
     for ( var i in options ) {
@@ -334,7 +334,7 @@ QScroll.prototype = {
 
                 if ( this.infiniteElements[i]._phase < this.options.infiniteLimit ) {
                     this.infiniteElements[i]._top = top;
-                    if ( this.options.infiniteUseTransform ) {
+                    if ( this.options.useTransform ) {
                         this.infiniteElements[i].style[utils.style.transform] = 'translate(0, ' + top + 'px)' + this.translateZ;
                     } else {
                         this.infiniteElements[i].style.top = top + 'px';
