@@ -155,9 +155,6 @@ var utils = (function () {
 function QScroll (el, options) {
     TM = {ScrollTop : 1, Transform : 2, styleTop : 3};
 
-    // 在实际测试中，scrolltop的表现会微好一点，其它情况三者差不多。
-    // 当发现性能不好时，请检查否为scroller添加translateZ(0)的属性
-
     this.options = {
         disableMouse:false,
         disableTouch:false,
