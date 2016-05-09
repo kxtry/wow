@@ -149,6 +149,24 @@ var utils = (function () {
         }
     };
 
+    me.extend(me.eventType = {}, {
+        touchstart: 1,
+        touchmove: 1,
+        touchend: 1,
+
+        mousedown: 2,
+        mousemove: 2,
+        mouseup: 2,
+
+        pointerdown: 3,
+        pointermove: 3,
+        pointerup: 3,
+
+        MSPointerDown: 3,
+        MSPointerMove: 3,
+        MSPointerUp: 3
+    });
+
     return me;
 })();
 
@@ -192,6 +210,7 @@ QScroll.prototype = {
     init: function () {
         this.initEvents();
         this.initContent();
+        this.enable();
     },
 
     destroy: function () {
@@ -452,7 +471,26 @@ QScroll.prototype = {
         this.options.dataClick.call(this, i);
     },
 
+    disable: function () {
+        this.enabled = false;
+    },
+
+    enable: function () {
+        this.enabled = true;
+    },
+
     start: function (e) {
+        if ( utils.eventType[e.type] != 1 ) {
+            if ( e.button !== 0 ) {
+                return;
+            }
+        }
+
+        if ( !this.enabled || (this.initiated && utils.eventType[e.type] !== this.initiated) ) {
+            return;
+        }
+
+        this.initiated	= utils.eventType[e.type];
         this.yend = this.ystart = this.yclient = this.ytouch(e);
         this.velocity = this.amplitude = 0;
         this.ylast = this.y;
@@ -463,6 +501,10 @@ QScroll.prototype = {
     },
 
     move: function (e) {
+        if ( !this.enabled || utils.eventType[e.type] !== this.initiated ) {
+            return;
+        }
+
         this.yend = this.ytouch(e);
         var delta = this.yclient - this.yend;
         if (delta > 2 || delta < -2) {
@@ -475,6 +517,11 @@ QScroll.prototype = {
     },
 
     end: function (e) {
+        if ( !this.enabled || utils.eventType[e.type] !== this.initiated ) {
+            return;
+        }
+
+        this.initiated = 0;
         this.momentum();
         if ((this.velocity > 10 || this.velocity < -10)) {
             this.amplitude = 0.8 * this.velocity;
